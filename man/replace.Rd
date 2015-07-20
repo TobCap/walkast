@@ -3,14 +3,14 @@
 \name{replace}
 \alias{nest_expr}
 \alias{replace}
-\alias{replace_lang_bottom}
-\alias{replace_lang_top}
+\alias{replace_post}
+\alias{replace_pre}
 \title{replace call object
 Replacement}
 \usage{
-replace_lang_top(before, after)
+replace_pre(before, after)
 
-replace_lang_bottom(before, after)
+replace_post(before, after)
 
 nest_expr(before, after, count)
 }
@@ -26,15 +26,15 @@ replace call object
 Replacement
 }
 \examples{
-walk_ast(quote(x + y + z), replace_lang_top(quote(y), quote(www)))
-walk_ast(quote(x + x + x), replace_lang_top(quote(x + x), quote(x)))
-walk_ast(quote(x + x + x), replace_lang_bottom(quote(x + x), quote(x)))
+walk_ast(quote(x + y + z), replace_pre(quote(y), quote(www)))
+walk_ast(quote(x + x + x), replace_pre(quote(x + x), quote(x)))
+walk_ast(quote(x + x + x), replace_post(quote(x + x), quote(x)))
 
-walk_ast(quote(1 + 2 + x^3), replace_lang_top(quote(x), quote(y)))
-walk_ast(quote(1 + 2 + x^3), replace_lang_top(quote(x^3), quote(y)))
-walk_ast(quote(1 + 2 + x^3), replace_lang_top(quote(2), quote(99)))
-walk_ast(quote(1 + 2 + x^3), replace_lang_top(quote(1+2), quote(99)))
-walk_ast(quote(1 + 2 + x^3), replace_lang_top(quote(`+`), quote(`-`)))
+walk_ast(quote(1 + 2 + x^3), replace_pre(quote(x), quote(y)))
+walk_ast(quote(1 + 2 + x^3), replace_pre(quote(x^3), quote(y)))
+walk_ast(quote(1 + 2 + x^3), replace_pre(quote(2), quote(99)))
+walk_ast(quote(1 + 2 + x^3), replace_pre(quote(1+2), quote(99)))
+walk_ast(quote(1 + 2 + x^3), replace_pre(quote(`+`), quote(`-`)))
 
 nest_expr(quote((1 + x)^2), quote(x), 3)
 nest_expr(quote((1 + x)^2), quote(1 + x), 3)
