@@ -1,0 +1,29 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# walkast
+
+## related functions
+* codetools::walkCode
+* pryr::ast (NSE wrapper of pryr::call_tree)
+
+```{r, echo = TRUE}
+library(pryr); library(codetools); library(walkast)
+expr1 <- quote(sum(1, x + y, sin(z * w)))
+
+walkCode(expr1)
+
+call_tree(expr1)
+
+walk_ast(expr1)
+```
