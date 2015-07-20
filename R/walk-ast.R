@@ -48,7 +48,7 @@ NULL
 #' @rdname ast
 #' @export
 walk_ast <- function(expr, visitor = show_tree()) {
-  stopifnot(is_visitor(visitor))
+  stopifnot(!is.expression(expr), is_visitor(visitor))
   v <- visitor
 
   iter <- function(x) {
