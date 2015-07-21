@@ -21,12 +21,23 @@ to_call <- function() make_visitor(
 #' @rdname helper
 #' @export
 to_lisp <- function() make_visitor(
-    leaf = as.character
+    leaf = function(x) as.character(deparse(x))
   , call = function(x) as_char(x)
   , vars = list(
-      as_char = function(x) {browser();paste0("(", hd(x), " ", tl(x[-1]), ")")}
-    , hd = function(x) as.character(x[[1]])
-    , tl = function(x) paste0(lapply(x, function(k) if (length(k) == 1) as.character(k) else as_char(x)), collapse = " ")
+      as_char = function(x) if (length(x) <= 1) hd(x) else paste0("(", hd(x[[1]]), " ", tl(x[-1]), ")")
+    , hd = function(x) as.character(x)
+    , tl = function(x) paste0(lapply(x, as_char), collapse = " ")
     , last = noquote
   )
+)
+
+to_r <- function() make_visitor(
+    leaf = function(x) as.character(list(x))
+  , call = function(x) as_char(x)
+  , vars = list(
+      as_char = function(x) if (length(x) <= 1) hd(x) else paste0(hd(x[[1]]), "(", tl(x[-1]), ")")
+    , hd = function(x) as.character(list(x[[1]]))
+    , tl = function(x) paste0(lapply(x, as_char), collapse = ", ")
+    , last = noquote
+    )
 )
