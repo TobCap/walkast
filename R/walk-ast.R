@@ -117,7 +117,10 @@ set_vars <- function(lst, pf_ = parent.frame()) {
   }
 
   for(i in seq_along(lst)) {
-    assign(lst_names[i], lst[[i]], pf_)
+    val <- lst[[i]]
+    if (is.function(val) && !is.primitive(val))
+      environment(val) <- pf_
+    assign(lst_names[i], val, pf_)
   }
 
 }
