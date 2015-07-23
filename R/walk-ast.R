@@ -13,7 +13,7 @@
 #' @name ast
 #'
 #' @examples
-#' walk_ast(quote(x + y * z))
+#' walk_ast(quote(x + y * z)) # default is show_tree()
 #' walk_ast(quote(x + y * z), show_tree())
 #' walk_ast(quote(x + y * z), make_visitor(call = as.list, last = str)) # the same as above
 #'
@@ -48,19 +48,18 @@ NULL
 #' @rdname ast
 #' @export
 walk_ast <- function(expr, visitor = show_tree()) {
-  stopifnot(is_visitor(visitor))
+  stopifnot(!is.expression(expr), is_visitor(visitor))
   v <- visitor
 
-  iter <- function(x) {
-    h <- v$handler(x) # hundler(x) returns closure with zero-arity (thunk)
-    if (is.function(h)) {
-      stopifnot(is.null(formals(h)))
-      return(h())
-    }
+  rm_srcref <- function(x) {
+    lst <- as.list(x)
+    lst[!vapply(lst, inherits, FALSE, "srcref")]
+  }
 
-    if (length(x) <= 1 && !is.recursive(x)) v$leaf(x)
-    else if (is.pairlist(x)) v$call(as.pairlist(lapply(x, iter)))
-    else v$call(as.call(lapply(x, iter)))
+  iter <- function(x) {
+    if (is.atomic(x) || is.symbol(x)) v$leaf(x)
+    else if (is.pairlist(x)) as.pairlist(lapply(rm_srcref(x), iter))
+    else v$call(as.call(c(list(v$hd(iter(x[[1]]))), v$tl(iter(as.pairlist(as.list(x)[-1]))))))
   }
 
   v$first(expr)
@@ -76,11 +75,13 @@ make_visitor <- function(
     , leaf = identity
     , first = identity
     , last = identity
+    , hd = identity
+    , tl = identity
     , vars = list()
   ) {
   stopifnot(is.list(vars))
   set_func(
-    list(handler = handler, call = call, leaf = leaf, first = first, last = last)
+    list(handler = handler, call = call, leaf = leaf, hd = hd, tl = tl, first = first, last = last)
   , environment())
   set_vars(vars)
 
@@ -117,7 +118,10 @@ set_vars <- function(lst, pf_ = parent.frame()) {
   }
 
   for(i in seq_along(lst)) {
-    assign(lst_names[i], lst[[i]], pf_)
+    val <- lst[[i]]
+    if (is.function(val) && !is.primitive(val))
+      environment(val) <- pf_
+    assign(lst_names[i], val, pf_)
   }
 
 }

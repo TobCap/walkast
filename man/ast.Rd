@@ -8,10 +8,11 @@
 \alias{walk_ast}
 \title{walk ast}
 \usage{
-walk_ast(expr, visitor = show_tree())
+walk_ast(expr, visitor)
 
 make_visitor(handler = function(x) NULL, call = identity, leaf = identity,
-  first = identity, last = identity, vars = list())
+  first = identity, last = identity, hd = identity, tl = identity,
+  vars = list())
 
 is_visitor(visitor)
 
