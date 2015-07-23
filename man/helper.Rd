@@ -3,12 +3,18 @@
 \name{helper}
 \alias{helper}
 \alias{to_call}
+\alias{to_lisp}
 \alias{to_list}
+\alias{to_r}
 \title{helper functions for walkast}
 \usage{
 to_list()
 
 to_call()
+
+to_lisp()
+
+to_r()
 }
 \description{
 helper functions for walkast
@@ -17,5 +23,7 @@ helper functions for walkast
 walk_ast(quote(1 + 2 * 3), to_list())
 walk_ast(list(quote(`+`), 1, list(quote(`*`), 2, 3)), to_call())
 walk_ast(quote(1 + 2 * 3), to_list() \%then\% to_call())
+walk_ast(quote(1 + 2 * 3), to_lisp())
+walk_ast(quote(1 + 2 * 3), to_r())
 }
 

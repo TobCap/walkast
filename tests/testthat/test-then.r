@@ -21,4 +21,3 @@ test_that("walkast %then%", {
   expect_identical(walk_ast(e1, mul2 %then% add1), quote(3 + 5 * 7))
 
 })
-
