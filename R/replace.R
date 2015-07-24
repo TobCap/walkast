@@ -1,9 +1,12 @@
 #' replace call object
 #' Replacement
 #'
-#' @param before language object or literal
-#' @param after language object or literal
+#' @param before a language object or literal
+#' @param after a language object or literal
+#' @param expr a language object
+#' @param target a langage object that you want to replace
 #' @param count count of iteration
+#'
 #' @name replace
 #' @examples
 #' walk_ast(quote(x + y + z), replace(quote(y), quote(www)))
@@ -24,9 +27,12 @@ NULL
 #' @rdname replace
 replace <- function(before, after) {
   make_visitor(
-      leaf = function(x) if (identical(x, before)) after else x
-    , call = function(x) if (identical(x, before)) after else x
-    , vars = list(before = before, after = after)
+      leaf = function(x) replace_(x)
+    , call = function(x) replace_(x)
+    , vars = list(
+        replace_ = function(x) if (identical(x, before)) after else x
+      , before = before
+      , after = after)
   )
 }
 

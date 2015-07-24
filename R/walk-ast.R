@@ -3,17 +3,18 @@
 #' @param expr a call object
 #' @param visitor visitor class created by make_visitor()
 #'
-#' @param handler a function
-#' @param call a function
-#' @param leaf a function
-#' @param first a function
-#' @param last a function
+#' @param call a function that manipulates a call object
+#' @param leaf a function that manipulates an atomic or a symbol object
+#' @param hd a function that manipulates a function object
+#' @param tl a function that manipulates parameters of a call object
+#' @param first a function that manipulates expr before running AST
+#' @param last a function that manipulates expr after running AST
 #' @param vars list of variables that are used inside make_visitor()
 #'
 #' @name ast
 #'
 #' @examples
-#' walk_ast(quote(x + y * z)) # default is show_tree()
+#' walk_ast(quote(x + y * z)) # default returns the first argument itself
 #' walk_ast(quote(x + y * z), show_tree())
 #' walk_ast(quote(x + y * z), make_visitor(call = as.list, last = str)) # the same as above
 #'
@@ -47,7 +48,7 @@ NULL
 
 #' @rdname ast
 #' @export
-walk_ast <- function(expr, visitor = show_tree()) {
+walk_ast <- function(expr, visitor = make_visitor()) {
   stopifnot(!is.expression(expr), is_visitor(visitor))
   v <- visitor
 
@@ -70,18 +71,17 @@ walk_ast <- function(expr, visitor = show_tree()) {
 #' @rdname ast
 #' @export
 make_visitor <- function(
-      handler = function(x) NULL
+      leaf = identity
     , call = identity
-    , leaf = identity
-    , first = identity
-    , last = identity
     , hd = identity
     , tl = identity
+    , first = identity
+    , last = identity
     , vars = list()
   ) {
   stopifnot(is.list(vars))
   set_func(
-    list(handler = handler, call = call, leaf = leaf, hd = hd, tl = tl, first = first, last = last)
+    list(leaf = leaf, call = call, hd = hd, tl = tl, first = first, last = last)
   , environment())
   set_vars(vars)
 

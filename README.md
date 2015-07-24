@@ -1,54 +1,27 @@
 walkast
 =======
 
-related functions
------------------
+The objective
+-------------
 
--   codetools::walkCode
--   pryr::ast (NSE wrapper of pryr::call\_tree)
+R is very flexble to handle a language object for meta-programming porpose. This package aims to provide a simple way to access a language object and you can manipulate it as you want by passing a visitor-function.
+
+Related functions that already exist
+------------------------------------
+
+-   `codetools::walkCode`
+-   `pryr::call_tree` (NSE version is `pryr::ast`)
+
+see [vignette](./vignettes/related_ast_functions.html) for a comparison among these functions.
+
+Installation
+------------
 
 ``` r
-library(pryr); library(codetools); library(walkast)
-expr1 <- quote(sum(1, x + y, sin(z * w)))
-
-walkCode(expr1)
-#> sum
-#> [1] 1
-#> `+`
-#> x
-#> y
-#> sin
-#> `*`
-#> z
-#> w
-
-call_tree(expr1)
-#> \- ()
-#>   \- `sum
-#>   \-  1
-#>   \- ()
-#>     \- `+
-#>     \- `x
-#>     \- `y
-#>   \- ()
-#>     \- `sin
-#>     \- ()
-#>       \- `*
-#>       \- `z
-#>       \- `w
-
-walk_ast(expr1)
-#> List of 4
-#>  $ : symbol sum
-#>  $ : num 1
-#>  $ :List of 3
-#>   ..$ : symbol +
-#>   ..$ : symbol x
-#>   ..$ : symbol y
-#>  $ :List of 2
-#>   ..$ : symbol sin
-#>   ..$ :List of 3
-#>   .. ..$ : symbol *
-#>   .. ..$ : symbol z
-#>   .. ..$ : symbol w
+# install.packages("devtools")
+devtools::install_github("tobcap/walkast")
+library("walkast")
 ```
+
+Examples
+--------

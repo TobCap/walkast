@@ -8,11 +8,10 @@
 \alias{walk_ast}
 \title{walk ast}
 \usage{
-walk_ast(expr, visitor)
+walk_ast(expr, visitor = make_visitor())
 
-make_visitor(handler = function(x) NULL, call = identity, leaf = identity,
-  first = identity, last = identity, hd = identity, tl = identity,
-  vars = list())
+make_visitor(leaf = identity, call = identity, hd = identity,
+  tl = identity, first = identity, last = identity, vars = list())
 
 is_visitor(visitor)
 
@@ -23,15 +22,17 @@ show_tree()
 
 \item{visitor}{visitor class created by make_visitor()}
 
-\item{handler}{a function}
+\item{leaf}{a function that manipulates an atomic or a symbol object}
 
-\item{call}{a function}
+\item{call}{a function that manipulates a call object}
 
-\item{leaf}{a function}
+\item{hd}{a function that manipulates a function object}
 
-\item{first}{a function}
+\item{tl}{a function that manipulates parameters of a call object}
 
-\item{last}{a function}
+\item{first}{a function that manipulates expr before running AST}
+
+\item{last}{a function that manipulates expr after running AST}
 
 \item{vars}{list of variables that are used inside make_visitor()}
 }
@@ -39,7 +40,7 @@ show_tree()
 walk ast
 }
 \examples{
-walk_ast(quote(x + y * z))
+walk_ast(quote(x + y * z)) # default returns the first argument itself
 walk_ast(quote(x + y * z), show_tree())
 walk_ast(quote(x + y * z), make_visitor(call = as.list, last = str)) # the same as above
 

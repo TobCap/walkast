@@ -9,70 +9,25 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-R is very flexble to handle a language object for meta-programming porpose.
+## Comparison of main features
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-| package name | codetools | pryr | walkast |
+|   | codetools | pryr | walkast |
 |:-:|:-:|:-:|:-:|
 | show ast | `walkCode(expr)` | `call_tree(expr)` | `walk_ast(expr)` |
-| modify call | NA | `modify_call(call, new_args)`, `modify_lang(x, f, ...)` | `walk_ast(expr, replace_pre())` |
+| modify call | `walkCode(expr, replaceLeaf)`^[replaceLeaf <- function(before, after) makeCodeWalker(leaf = function(e, w) if (identical(e, before)) after else e, call = function(e, w) as.call(lapply(e, walkCode, w)))
+] | `modify_call(call, new_args)`, `modify_lang(x, f, ...)` | `walk_ast(expr, replace(...))` |
+| print lisp-like expression | `showTree(expr)` | NA | `walk_ast(expr, to_lisp())` |
+| to list() structure | `walkCode(expr, toList)`^[toList <- makeCodeWalker(call = function(e, w) lapply(e, walkCode, w), leaf = function(e, w) e)] | NA | `walk_ast(expr, to_list())` |
 
-## Comparison
+## Showing AST
 ```{r, echo = TRUE}
 library(pryr); library(codetools); library(walkast)
 expr1 <- quote(sum(1, x + y, sin(z * w)))
-
+```
+```{r, echo = TRUE}
 walkCode(expr1)
 
 call_tree(expr1)
 
 walk_ast(expr1)
 ```
-
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))

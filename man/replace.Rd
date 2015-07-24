@@ -11,9 +11,13 @@ replace(before, after)
 nest_expr(expr, target, count)
 }
 \arguments{
-\item{before}{language object or literal}
+\item{before}{a language object or literal}
 
-\item{after}{language object or literal}
+\item{after}{a language object or literal}
+
+\item{expr}{a language object}
+
+\item{target}{a langage object that you want to replace}
 
 \item{count}{count of iteration}
 }
