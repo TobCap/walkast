@@ -1,19 +1,6 @@
----
-title: "Walking AST of R-language"
-author: "tobcap@github"
-date: "`r Sys.Date()`"
-output:
-  html_document:
-    highlight: haddock
-    keep_md: yes
-    theme: united
-  md_document:
-    variant: markdown_github
-vignette: >
-  %\VignetteIndexEntry{Walking AST of R-language}
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
----
+# Walking AST of R-language
+tobcap@github  
+`r Sys.Date()`  
 
 ## Comparison of main features
 
@@ -27,14 +14,64 @@ vignette: >
 | is an expression object able to handle? | No | Yes | No |
 
 ## Showing AST
-```{r, echo = TRUE, message = FALSE}
+
+```r
 library(pryr); library(codetools); library(walkast)
 expr1 <- quote(sum(1, x + y, sin(z * w)))
 ```
-```{r, echo = TRUE}
+
+```r
 walkCode(expr1)
+```
 
+```
+## sum
+## [1] 1
+## `+`
+## x
+## y
+## sin
+## `*`
+## z
+## w
+```
+
+```r
 call_tree(expr1)
+```
 
+```
+## \- ()
+##   \- `sum
+##   \-  1
+##   \- ()
+##     \- `+
+##     \- `x
+##     \- `y
+##   \- ()
+##     \- `sin
+##     \- ()
+##       \- `*
+##       \- `z
+##       \- `w
+```
+
+```r
 walk_ast(expr1, show_tree())
+```
+
+```
+## List of 4
+##  $ : symbol sum
+##  $ : num 1
+##  $ :List of 3
+##   ..$ : symbol +
+##   ..$ : symbol x
+##   ..$ : symbol y
+##  $ :List of 2
+##   ..$ : symbol sin
+##   ..$ :List of 3
+##   .. ..$ : symbol *
+##   .. ..$ : symbol z
+##   .. ..$ : symbol w
 ```
