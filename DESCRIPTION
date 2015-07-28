@@ -2,10 +2,10 @@ Package: walkast
 Type: Package
 Title: Walking Abstruct Syntax Tree of R
 Version: 0.0.1
-Date: 2015-07-24
-Authors@R: person("tob", "", email = "tobakucapitalism@gmail.com",
-  role = c("aut", "cre"))
+Date: 2015-07-28
+Authors@R: person("tob", "", email = "tobakucapitalism@gmail.com", role = c("aut", "cre"))
 Description: Providing meta-programming APIs for walking AST
 License: MIT + file LICENSE
+LazyDate: true
 Suggests: testthat, knitr
 VignetteBuilder: knitr
