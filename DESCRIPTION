@@ -1,12 +1,13 @@
 Package: walkast
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Walking Abstruct Syntax Tree of R
 Version: 0.0.1
-Date: 2015-07-05
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
-LazyData: TRUE
+Date: 2015-07-28
+Authors@R: person("tob", "",
+  email = "tobakucapitalism@gmail.com", role = c("aut", "cre"))
+Description: Providing meta-programming APIs for walking AST
+License: MIT + file LICENSE
+LazyDate: true
+Depends: R(>= 2.10.0)
 Suggests: testthat, knitr
 VignetteBuilder: knitr

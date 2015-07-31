@@ -11,9 +11,13 @@ replace(before, after)
 nest_expr(expr, target, count)
 }
 \arguments{
-\item{before}{language object or literal}
+\item{before}{a language object or literal}
 
-\item{after}{language object or literal}
+\item{after}{a language object or literal}
+
+\item{expr}{a language object}
+
+\item{target}{a langage object that you want to replace}
 
 \item{count}{count of iteration}
 }
@@ -24,6 +28,10 @@ Replacement
 \examples{
 walk_ast(quote(x + y + z), replace(quote(y), quote(www)))
 walk_ast(quote(x + x + x), replace(quote(x + x), quote(x)))
+
+# because `y + x + x` is parsed as `((y + x) + x)`,
+# the next code manipulates nothing
+walk_ast(quote(y + x + x), replace(quote(x + x), quote(x)))
 
 walk_ast(quote(1 + 2 + x ^ 3), replace(quote(x), quote(y)))
 walk_ast(quote(1 + 2 + x ^ 3), replace(quote(x^3), quote(y)))

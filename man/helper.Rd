@@ -2,19 +2,25 @@
 % Please edit documentation in R/helper.R
 \name{helper}
 \alias{helper}
+\alias{show_lisp}
+\alias{show_r}
+\alias{show_tree}
 \alias{to_call}
-\alias{to_lisp}
 \alias{to_list}
-\alias{to_r}
 \title{helper functions for walkast}
 \usage{
 to_list()
 
 to_call()
 
-to_lisp()
+show_tree()
 
-to_r()
+show_lisp(quote_bin = FALSE)
+
+show_r()
+}
+\arguments{
+\item{quote_bin}{boolean: showing quoted binary operator or not}
 }
 \description{
 helper functions for walkast
@@ -23,7 +29,8 @@ helper functions for walkast
 walk_ast(quote(1 + 2 * 3), to_list())
 walk_ast(list(quote(`+`), 1, list(quote(`*`), 2, 3)), to_call())
 walk_ast(quote(1 + 2 * 3), to_list() \%then\% to_call())
-walk_ast(quote(1 + 2 * 3), to_lisp())
-walk_ast(quote(1 + 2 * 3), to_r())
+walk_ast(quote(1 + 2 * 3), show_lisp())
+walk_ast(quote(1 + 2 * 3), show_lisp(quote_bin = TRUE))
+walk_ast(quote(1 + 2 * 3), show_r())
 }
 
