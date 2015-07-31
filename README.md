@@ -1,21 +1,21 @@
-{walkast}
-=========
+walkast
+=======
 
 The objective
 -------------
 
-R is very flexble to handle a language object for meta-programming porpose. This package aims to provide a simple way to access a language object and you can manipulate it as you want by passing a visitor-function for printing, transforming, analyzing, and generating a new code.
+This package aims to provide a simple way to access a language object and you can manipulate it as you want by passing a visitor-function for printing, transforming, analyzing, and generating a new code.
 
 OOP or Functional Style?
 ------------------------
 
-It is natural for an OOP language to use visitor-pattern, and it is common for a functional language to use pattern-matching. R, I think, is not suitable for the use of those idea because semantics itself does not support those functionalities.
+It is natural for an OOP language to use visitor-pattern, and it is common for a functional language to use pattern-matching. R, I think, is not suitable for the use of those ideas because semantics itself does not support those functionalities.
 
 Related functions that already exist
 ------------------------------------
 
--   `codetools`::`walkCode` by [Luke Tierney](https://cran.r-project.org/web/packages/codetools/index.html)
--   `pryr`::`call_tree` (NSE version is `pryr`::`ast`) by [Hadley Wickham](https://cran.r-project.org/web/packages/pryr/index.html)
+-   `codetools::walkCode` by [Luke Tierney](https://cran.r-project.org/web/packages/codetools/index.html)
+-   `pryr::call_tree` (NSE version is `pryr`::`ast`) by [Hadley Wickham](https://cran.r-project.org/web/packages/pryr/index.html)
 
 see [vignette](./vignettes/related_ast_functions.md) for a comparison among these functions.
 
@@ -34,37 +34,49 @@ Main functions
 #### `walk_ast(expr, visitor)`
 
 -   expr: a language object (not permitted expression object)
--   visitor: S3 class that is an environment which must have six functions (leaf, call, hd, tl, first, last)
+-   visitor: an environment whose class name includes "visitor" and which must have six functions (leaf, call, hd, tl, first, last) \#\#\#\# `make_visitor(leaf, call, hd, tl, first, last, vars)` A helper which creates visitor-class.
 
-#### `make_visitor(leaf, call, hd, tl, first, last, vars)`
+-   `leaf()`: a function that manipulates leaf part of langauge object (a symbol or an atomic)
+-   `call()`: a function that manipulates call part of langauge object (call object)
+-   `hd()`: a function that manipulates caller part (head of call object)
+-   `tl()`: a function that manipulates arguments part of call (tail of call object)
+-   `first()`: a function that manipulates expr before running AST
+-   `last()`: a function that manipulates expr after running AST
 
-A helper which creates visitor-class.
-
--   leaf: a function that manipulates leaf part of langauge object (a symbol or an atomic)
--   call: a function that manipulates call part of langauge object (call object)
--   hd: a function that manipulates caller part (head of call object)
--   tl: a function that manipulates arguments part of call (tail of call object)
--   first: a function that manipulates expr before running AST
--   last: a function that manipulates expr after running AST
+    ``` r
+    # you can use R6 class to make `visitor()` if you want
+    # install.packages("R6")
+    v1 <- R6Class(
+        "visitor"
+      , public = list(
+          hd = identity
+        , tl = identity
+        , leaf = identity
+        , call = identity
+        , first = identity
+        , last = identity
+        )
+      )$new()
+    ```
 
 Other helper functions
 ----------------------
 
 #### Printing
 
--   `show_tree`
--   `show_lisp`
--   `show_r`
+-   `show_tree()`
+-   `show_lisp()`
+-   `show_r()`
 
 #### Replacing
 
--   `replace`
--   `nest_expr`
+-   `replace(before, after)`
+-   `nest_expr(expr, target, count)`
 
 #### Conversion
 
--   `to_list`
--   `to_call`
+-   `to_list()`
+-   `to_call()`
 
 #### Combination
 
@@ -119,6 +131,7 @@ walk_ast(e1, replace(2, quote(x)))
 ``` r
 e2 <- quote((1 + x) ^ 2)
 
+# nest_expr() calls walk_ast() recursivly
 nest_expr(e2, quote(x), 3)
 #> (1 + (1 + (1 + x)^2)^2)^2
 
