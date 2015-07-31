@@ -4,18 +4,15 @@
 \alias{ast}
 \alias{is_visitor}
 \alias{make_visitor}
-\alias{show_tree}
 \alias{walk_ast}
 \title{walk ast}
 \usage{
 walk_ast(expr, visitor = make_visitor())
 
 make_visitor(leaf = identity, call = identity, hd = identity,
-  tl = identity, first = identity, last = identity, vars = list())
+  tl = identity, initial = identity, final = identity, ...)
 
 is_visitor(visitor)
-
-show_tree()
 }
 \arguments{
 \item{expr}{a call object}
@@ -30,19 +27,19 @@ show_tree()
 
 \item{tl}{a function that manipulates parameters of a call object}
 
-\item{first}{a function that manipulates expr before running AST}
+\item{initial}{a function that manipulates expr before running AST}
 
-\item{last}{a function that manipulates expr after running AST}
+\item{final}{a function that manipulates expr after running AST}
 
-\item{vars}{list of variables that are used inside make_visitor()}
+\item{...}{aribtrary functions or variables}
 }
 \description{
 walk ast
 }
 \examples{
-walk_ast(quote(x + y * z)) # default returns the first argument itself
+walk_ast(quote(x + y * z)) # default returns the initial argument itself
 walk_ast(quote(x + y * z), show_tree())
-walk_ast(quote(x + y * z), make_visitor(call = as.list, last = str)) # the same as above
+walk_ast(quote(x + y * z), make_visitor(call = as.list, final = str)) # the same as above
 
 time2_leaf <- make_visitor(
   leaf = function(x) if (is.numeric(x)) x * 2 else x
@@ -52,23 +49,19 @@ walk_ast(quote(1+2*3), time2_leaf)
 add_leaf <-
 make_visitor(
   leaf = function(x) {if (is.numeric(x)) val <<- val + x},
-  first = function(x) val <<- 0, # need to initialize
-  last = function(x) val,
-  vars = list(val = 0)
+  initial = function(x) {val <<- 0; x}, # need to initialize
+  final = function(`_`) val,
+  val = 0
 )
 
 count_leaf <-
   make_visitor(
-    leaf = function(x) v <<- v + 1,
-    first = function(x) v <<- 0,
-    last = function(x) v,
-    vars = list(v = 0)
+    leaf = function(`_`) v <<- v + 1,
+    initial = function(x) {v <<- 0; x},
+    final = function(`_`) v,
+    v = 0
   )
 walk_ast(quote(1 + 2 * 3), add_leaf)
 walk_ast(quote(1 + 2 * 3), count_leaf)
-time2_leaf <- make_visitor(
-leaf = function(x) if (is.numeric(x)) x * 2 else x
-)
-walk_ast(quote(1+2*3), time2_leaf)
 }
 

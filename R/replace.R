@@ -12,6 +12,10 @@
 #' walk_ast(quote(x + y + z), replace(quote(y), quote(www)))
 #' walk_ast(quote(x + x + x), replace(quote(x + x), quote(x)))
 #'
+#' # because `y + x + x` is parsed as `((y + x) + x)`,
+#' # the next code manipulates nothing
+#' walk_ast(quote(y + x + x), replace(quote(x + x), quote(x)))
+#'
 #' walk_ast(quote(1 + 2 + x ^ 3), replace(quote(x), quote(y)))
 #' walk_ast(quote(1 + 2 + x ^ 3), replace(quote(x^3), quote(y)))
 #' walk_ast(quote(1 + 2 + x ^ 3), replace(quote(2), quote(99)))
@@ -29,10 +33,9 @@ replace <- function(before, after) {
   make_visitor(
       leaf = function(x) replace_(x)
     , call = function(x) replace_(x)
-    , vars = list(
-        replace_ = function(x) if (identical(x, before)) after else x
-      , before = before
-      , after = after)
+    , replace_ = function(x) if (identical(x, before)) after else x
+    , before = before
+    , after = after
   )
 }
 

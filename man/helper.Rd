@@ -4,6 +4,7 @@
 \alias{helper}
 \alias{show_lisp}
 \alias{show_r}
+\alias{show_tree}
 \alias{to_call}
 \alias{to_list}
 \title{helper functions for walkast}
@@ -11,6 +12,8 @@
 to_list()
 
 to_call()
+
+show_tree()
 
 show_lisp(quote_bin = FALSE)
 

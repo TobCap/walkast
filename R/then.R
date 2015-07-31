@@ -29,8 +29,8 @@ NULL
     , call = compose(lhs$call, rhs$call, e)
     , hd = compose(lhs$hd, rhs$hd, e)
     , tl = compose(lhs$tl, rhs$tl, e)
-    , first = compose(lhs$first, rhs$first, e)
-    , last = compose(lhs$last, rhs$last, e)
+    , initial = compose(lhs$initial, rhs$initial, e)
+    , final = compose(lhs$final, rhs$final, e)
   ), envir = e)
 
   lhs_vars <- complement(lhs)
@@ -58,5 +58,5 @@ compose <- function(f, g, pf_ = parent.frame()) {
   else function(x) g(f(x))
 }
 complement <- function(x) {
-  setdiff(ls(x, all.names = TRUE), c("leaf", "call", "hd", "tl", "first", "last"))
+  setdiff(ls(x, all.names = TRUE), must_funs)
 }

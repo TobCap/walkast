@@ -19,8 +19,12 @@ to_list <- function() make_visitor(
 #' @rdname helper
 #' @export
 to_call <- function() make_visitor(
-  call = function(x) if(!is.pairlist(x)) as.call(x) else x
+  call = function(x) if (!is.pairlist(x)) as.call(x) else x
 )
+
+#' @rdname helper
+#' @export
+show_tree <- function() make_visitor(call = as.list, final = str)
 
 #' @rdname helper
 #' @export
@@ -29,8 +33,9 @@ show_lisp <- function(quote_bin = FALSE) {
     call = function(x) paste0(x, collapse = "")
   , hd = function(x) paste0("(", if (length(x) <= 1) as.character(if (quote_bin) list(x) else x) else tl(x), " ")
   , tl = function(x) paste0(paste0(x, collapse = " "), ")", collapse = "")
-  , vars = list(quote_bin = quote_bin)
-  , last = noquote
+  , final = noquote
+  , quote_bin = quote_bin
+
   )
 }
 #' @rdname helper
@@ -40,6 +45,6 @@ show_r <- function() {
     call = function(x) paste0(x, collapse = "")
   , hd = function(x) if (length(x) <= 1) as.character(list(x)) else tl(x)
   , tl = function(x) paste0("(", paste0(x, collapse = ", "), ")", collapse = "")
-  , last = noquote
+  , final = noquote
   )
 }
