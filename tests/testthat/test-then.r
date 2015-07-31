@@ -20,4 +20,7 @@ test_that("walkast %then%", {
   expect_identical(walk_ast(e1, add1 %then% mul2), quote(4 + 6 * 8))
   expect_identical(walk_ast(e1, mul2 %then% add1), quote(3 + 5 * 7))
 
+  expect_identical(
+    walk_ast(quote(1 + 2 * 3), to_list() %then% to_call())
+  , quote(1 + 2 * 3))
 })
