@@ -17,7 +17,7 @@ Related functions that already exist
 -   `codetools::walkCode` by [Luke Tierney](https://cran.r-project.org/web/packages/codetools/index.html)
 -   `pryr::call_tree` (NSE version is `pryr`::`ast`) by [Hadley Wickham](https://cran.r-project.org/web/packages/pryr/index.html)
 
-see [vignette](./vignettes/related_ast_functions.md) for a comparison among these functions.
+see [vignette](./vignettes/related_ast_functions.html) for a comparison among these functions.
 
 Installation
 ------------
@@ -33,30 +33,41 @@ Main functions
 
 #### `walk_ast(expr, visitor)`
 
--   expr: a language object (not permitted expression object)
--   visitor: an environment whose class name includes "visitor" and which must have six functions (leaf, call, hd, tl, first, last) \#\#\#\# `make_visitor(leaf, call, hd, tl, first, last, vars)` A helper which creates visitor-class.
+-   expr: a language object (not accept an expression object)
+-   visitor: an environment whose class name includes "visitor" and which must have six functions (leaf, call, hd, tl, first, last)
+
+#### `make_visitor(leaf, call, hd, tl, initial, final, ...)`
+
+A helper which creates visitor-class.
 
 -   `leaf()`: a function that manipulates leaf part of langauge object (a symbol or an atomic)
 -   `call()`: a function that manipulates call part of langauge object (call object)
 -   `hd()`: a function that manipulates caller part (head of call object)
 -   `tl()`: a function that manipulates arguments part of call (tail of call object)
--   `first()`: a function that manipulates expr before running AST
--   `last()`: a function that manipulates expr after running AST
+-   `initial()`: a function that manipulates expr before running AST
+-   `final()`: a function that manipulates expr after running AST
+-   `...`: arbitrary functions or variables that you want to use
 
     ``` r
     # you can use R6 class to make `visitor()` if you want
-    # install.packages("R6")
+    library(walkast); library(R6)
+    v0 <- make_visitor(leaf = function(x) if(is.numeric(x)) x * 2 else x)
+
+    # need to define all functions
     v1 <- R6Class(
         "visitor"
       , public = list(
-          hd = identity
-        , tl = identity
-        , leaf = identity
+          leaf = function(x) if(is.numeric(x)) x * 2 else x
         , call = identity
-        , first = identity
-        , last = identity
+        , hd = identity
+        , tl = identity
+        , initial = identity
+        , final = identity
         )
       )$new()
+
+    walk_ast(quote(1 + 2 * 3), v0)
+    walk_ast(quote(1 + 2 * 3), v1)
     ```
 
 Other helper functions
