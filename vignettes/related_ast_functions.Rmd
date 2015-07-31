@@ -2,13 +2,7 @@
 title: "Walking AST of R-language"
 author: "tobcap@github"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    highlight: haddock
-    keep_md: yes
-    theme: united
-  md_document:
-    variant: markdown_github
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Walking AST of R-language}
   %\VignetteEncoding{UTF-8}
@@ -30,11 +24,11 @@ vignette: >
 ```{r, echo = TRUE, message = FALSE}
 library(pryr); library(codetools); library(walkast)
 expr1 <- quote(sum(1, x + y, sin(z * w)))
-```
-```{r, echo = TRUE}
+
 walkCode(expr1)
 
 call_tree(expr1)
 
+# using utils::str() to show expr structure
 walk_ast(expr1, show_tree())
 ```
