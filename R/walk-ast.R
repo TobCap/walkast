@@ -84,7 +84,8 @@ make_visitor <- function(
 #' @rdname ast
 #' @export
 is_visitor <- function(visitor)
-  is.environment(visitor) && inherits(visitor, "visitor")
+  is.environment(visitor) && inherits(visitor, "visitor") &&
+   all(vapply(must_funs, exists, logical(1), envir = visitor))
 
 set_func <- function(e, dots) {
   # if `dots` has more than one length and not named, list2env() returns error
