@@ -58,14 +58,14 @@ A helper which creates visitor-class.
 
     ```{r, message = FALSE, eval = FALSE}
     # you can use R6 class to make `visitor()` if you want
-    v0 <- make_visitor(leaf = function(x) if(is.numeric(x)) x * 2 else x)
+    v0 <- make_visitor(leaf = function(x) if (is.numeric(x)) x * 2 else x)
     
     # need to define all functions
     library(R6)
     v1 <- R6Class(
         "visitor"
       , public = list(
-          leaf = function(x) if(is.numeric(x)) x * 2 else x
+          leaf = function(x) if (is.numeric(x)) x * 2 else x
         , call = identity
         , hd = identity
         , tl = identity
@@ -170,6 +170,6 @@ walk_ast(e3, plus_plus2)
 ```
 
 ## ToDo (someday)
-* Get information of type name of each Node
+* Get information of type name of each node
 * Analyze context and identify an environment where a function is called
-* Check if expression is reducable
+* Check if an expression is reducable
