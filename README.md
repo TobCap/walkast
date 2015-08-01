@@ -17,7 +17,7 @@ Related functions that already exist
 -   `codetools::walkCode` by [Luke Tierney](https://cran.r-project.org/web/packages/codetools/index.html)
 -   `pryr::call_tree` (NSE version is `pryr`::`ast`) by [Hadley Wickham](https://cran.r-project.org/web/packages/pryr/index.html)
 
-see [vignette](./vignettes/related_ast_functions.html) for a comparison among these functions.
+see [vignette](./vignettes/related_ast_functions.md) for a comparison among these functions.
 
 Installation
 ------------
@@ -50,10 +50,10 @@ A helper which creates visitor-class.
 
     ``` r
     # you can use R6 class to make `visitor()` if you want
-    library(walkast); library(R6)
     v0 <- make_visitor(leaf = function(x) if(is.numeric(x)) x * 2 else x)
 
     # need to define all functions
+    library(R6)
     v1 <- R6Class(
         "visitor"
       , public = list(
@@ -76,13 +76,13 @@ Other helper functions
 #### Printing
 
 -   `show_tree()`
--   `show_lisp()`
+-   `show_lisp(quote_bin = FALSE)`
 -   `show_r()`
 
 #### Replacing
 
 -   `replace(before, after)`
--   `nest_expr(expr, target, count)`
+-   `nest_expr(expr, target, count)` this recursively calls calls walk\_ast()
 
 #### Conversion
 
@@ -142,7 +142,6 @@ walk_ast(e1, replace(2, quote(x)))
 ``` r
 e2 <- quote((1 + x) ^ 2)
 
-# nest_expr() calls walk_ast() recursivly
 nest_expr(e2, quote(x), 3)
 #> (1 + (1 + (1 + x)^2)^2)^2
 
