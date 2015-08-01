@@ -34,7 +34,7 @@ Main functions
 #### `walk_ast(expr, visitor)`
 
 -   expr: a language object (not accept an expression object)
--   visitor: an environment whose class name includes "visitor" and which must have six functions (leaf, call, hd, tl, first, last)
+-   visitor: an environment whose class name includes "visitor" and which must have six functions (leaf, call, hd, tl, initial, final)
 
 #### `make_visitor(leaf, call, hd, tl, initial, final, ...)`
 
@@ -126,7 +126,7 @@ walk_ast(e1, show_lisp())
 ```
 
 ``` r
-walk_ast(e1, show_lisp(TRUE))
+walk_ast(e1, show_lisp(quote_bin = TRUE))
 #> [1] (`-` (`+` 1 (`*` x 2)) y)
 ```
 

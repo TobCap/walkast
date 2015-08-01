@@ -42,7 +42,7 @@ library("walkast")
 #### `walk_ast(expr, visitor)`
 
 * expr: a language object (not accept an expression object)  
-* visitor: an environment whose class name includes "visitor" and which must have six functions (leaf, call, hd, tl, first, last)
+* visitor: an environment whose class name includes "visitor" and which must have six functions (leaf, call, hd, tl, initial, final)
 
 #### `make_visitor(leaf, call, hd, tl, initial, final, ...)`
 
