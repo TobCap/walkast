@@ -27,7 +27,7 @@ functionalities.
 * `codetools::walkCode` by [Luke Tierney](https://cran.r-project.org/web/packages/codetools/index.html)
 * `pryr::call_tree` (NSE version is `pryr`::`ast`) by [Hadley Wickham](https://cran.r-project.org/web/packages/pryr/index.html)
 
-see [vignette](./vignettes/related_ast_functions.html) for a comparison among these functions.
+see [vignette](./inst/doc/related_ast_functions.html) for a comparison among these functions.
 
 
 ## Installation
