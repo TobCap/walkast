@@ -50,14 +50,14 @@ A helper which creates visitor-class.
 
     ``` r
     # you can use R6 class to make `visitor()` if you want
-    v0 <- make_visitor(leaf = function(x) if(is.numeric(x)) x * 2 else x)
+    v0 <- make_visitor(leaf = function(x) if (is.numeric(x)) x * 2 else x)
 
     # need to define all functions
     library(R6)
     v1 <- R6Class(
         "visitor"
       , public = list(
-          leaf = function(x) if(is.numeric(x)) x * 2 else x
+          leaf = function(x) if (is.numeric(x)) x * 2 else x
         , call = identity
         , hd = identity
         , tl = identity
@@ -98,46 +98,67 @@ Examples
 
 ``` r
 library("walkast")
-e1 <- quote(1 + 2)
+e1 <- quote(1 + x * 2 - y)
 ```
 
 ``` r
 walk_ast(e1)
-#> 1 + 2
+#> 1 + x * 2 - y
 ```
 
 ``` r
 walk_ast(e1, show_tree())
 #> List of 3
-#>  $ : symbol +
-#>  $ : num 1
-#>  $ : num 2
-#> NULL
+#>  $ : symbol -
+#>  $ :List of 3
+#>   ..$ : symbol +
+#>   ..$ : num 1
+#>   ..$ :List of 3
+#>   .. ..$ : symbol *
+#>   .. ..$ : symbol x
+#>   .. ..$ : num 2
+#>  $ : symbol y
+```
+
+``` r
+walk_ast(e1, show_lisp())
+#> [1] (- (+ 1 (* x 2)) y)
+```
+
+``` r
+walk_ast(e1, show_lisp(TRUE))
+#> [1] (`-` (`+` 1 (`*` x 2)) y)
+```
+
+``` r
+# this is parsable
+walk_ast(e1, show_r())
+#> [1] `-`(`+`(1, `*`(x, 2)), y)
 ```
 
 ``` r
 mult2 <- make_visitor(leaf = function(x) if (is.numeric(x)) x * 2 else x)
 walk_ast(e1, mult2)
-#> 2 + 4
+#> 2 + x * 4 - y
 
 add1 <- make_visitor(leaf = function(x) if (is.numeric(x)) x + 1 else x)
 walk_ast(e1, add1)
-#> 2 + 3
+#> 2 + x * 3 - y
 
 walk_ast(e1, add1 %then% mult2)
-#> 4 + 6
+#> 4 + x * 6 - y
 walk_ast(e1, mult2 %then% add1)
-#> 3 + 5
+#> 3 + x * 5 - y
 ```
 
 ``` r
 walk_ast(e1, replace(quote(`+`), quote(`-`)))
-#> 1 - 2
+#> 1 - x * 2 - y
 ```
 
 ``` r
 walk_ast(e1, replace(2, quote(x)))
-#> 1 + x
+#> 1 + x * x - y
 ```
 
 ``` r
@@ -196,6 +217,6 @@ walk_ast(e3, plus_plus2)
 ToDo (someday)
 --------------
 
--   Get information of type name of each Node
+-   Get information of type name of each node
 -   Analyze context and identify an environment where a function is called
--   Check if expression is reducable
+-   Check if an expression is reducable

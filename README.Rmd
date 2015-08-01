@@ -100,7 +100,7 @@ A helper which creates visitor-class.
 ## Examples
 ```{r, message = FALSE}
 library("walkast")
-e1 <- quote(1 + 2)
+e1 <- quote(1 + x * 2 - y)
 ```
 ```{r}
 walk_ast(e1)
@@ -108,6 +108,16 @@ walk_ast(e1)
 
 ```{r}
 walk_ast(e1, show_tree())
+```
+```{r}
+walk_ast(e1, show_lisp())
+```
+```{r}
+walk_ast(e1, show_lisp(quote_bin = TRUE))
+```
+```{r}
+# this is parsable
+walk_ast(e1, show_r())
 ```
 
 ```{r}
